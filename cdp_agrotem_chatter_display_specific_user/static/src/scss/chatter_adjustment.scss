@@ -1,0 +1,145 @@
+/* ==================================================
+   ULTRAWIDE: Odoo Authentic Natural Look (FIXED)
+   ================================================== */
+
+body .o_form_view.o_chatter_at_bottom:not(.o_modal) {
+    display: flex !important;
+    flex-direction: column !important;
+    width: 100% !important;
+
+    /* ✅ Background luar tetap abu (INI PENTING) */
+    background-color: var(--view-background) !important;
+}
+
+/* ==================================================
+   FORM CONTAINER
+   ================================================== */
+
+.o_form_view.o_chatter_at_bottom .o_form_renderer,
+.o_form_view.o_chatter_at_bottom .o_form_view_container {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+}
+
+/* ==================================================
+   STATUSBAR
+   ================================================== */
+
+.o_form_view.o_chatter_at_bottom .o_form_statusbar {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 4px 16px !important;
+
+    background-color: #fff !important;
+    border-bottom: 1px solid var(--border-color) !important;
+
+    position: static !important;
+}
+
+/* ==================================================
+   SHEET BACKGROUND (AREA LUAR KERTAS)
+   ================================================== */
+
+.o_form_view.o_chatter_at_bottom .o_form_sheet_bg {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 8px 0 !important;
+
+    /* tetap abu biar ada kontras */
+    background-color: var(--view-background) !important;
+}
+
+/* ==================================================
+   SHEET (KERTAS FORM) — INI YANG PALING PENTING
+   ================================================== */
+
+.o_form_view.o_chatter_at_bottom .o_form_sheet {
+    max-width: 98% !important;
+    width: 98% !important;
+    margin: 0 auto !important;
+
+    padding: 12px 24px !important;
+
+    /* ✅ WAJIB PUTIH */
+    background-color: #fff !important;
+
+    border: 1px solid var(--border-color) !important;
+    border-radius: 2px !important;
+
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* ==================================================
+   CHATTER (BOTTOM MODE)
+   ================================================== */
+
+.o_form_view.o_chatter_at_bottom .o-mail-Form-chatter.o-bottom,
+.o_form_view.o_chatter_at_bottom .o-mail-ChatterContainer {
+    width: 98% !important;
+    max-width: 98% !important;
+
+    margin: 8px auto 24px auto !important;
+    padding: 16px 32px !important;
+
+    /* 🔥 BEDA DARI BACKGROUND */
+    background-color: #fafafa !important;
+
+    border: 1px solid var(--border-color) !important;
+    border-radius: 2px !important;
+
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08) !important;
+}
+
+
+/* ==================================================
+   ONE2MANY / ORDER LINE — banyak kolom (side & bottom)
+   --------------------------------------------------
+   Odoo 17 "membekukan" lebar kolom (table-layout: fixed + width/max-width
+   inline di <th>) dan memaksa tabel muat di lebar sheet. Dengan 20 kolom,
+   kolom kanan terpotong / isinya ter-ellipsis. Di sini tabel dibiarkan
+   melebar sesuai isi dan wrapper-nya bisa di-scroll horizontal.
+   ================================================== */
+
+.o_form_view.o_chatter_at_bottom,
+.o_form_view.o_chatter_small_side {
+    .o_notebook,
+    .o_notebook .tab-content,
+    .o_notebook .tab-pane,
+    .o_field_x2many {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+    }
+
+    .o_field_x2many .o_list_renderer {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+        overflow-x: auto !important;
+    }
+
+    .o_field_x2many .o_list_renderer > table.o_list_table {
+        width: auto !important;          // isi tabel menentukan lebar
+        min-width: 100% !important;      // tetap penuh bila kolom sedikit
+        max-width: none !important;
+        table-layout: auto !important;   // abaikan lebar kolom yang dibekukan Odoo
+    }
+
+    .o_field_x2many .o_list_renderer > table.o_list_table {
+        > thead > tr > th,
+        > tbody > tr > td,
+        > tfoot > tr > td {
+            white-space: nowrap !important;
+        }
+
+        // kolom teks panjang (description, note) boleh wrap agar tidak terlalu lebar
+        > tbody > tr > td.o_list_text,
+        > tbody > tr > td[name="name"] {
+            white-space: normal !important;
+            min-width: 250px;
+        }
+    }
+}

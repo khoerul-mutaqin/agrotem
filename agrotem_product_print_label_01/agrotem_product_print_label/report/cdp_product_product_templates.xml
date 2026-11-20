@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="cdp_report_label_10x8cm">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-set="qty" t-value="doc.cdp_print_label_qty or 1"/>
+                <t t-foreach="range(qty)" t-as="i">
+                    <div style="width:100mm;height:85mm;border:1px solid #ffffff;
+                                padding:4mm;box-sizing:border-box;
+                                font-size:11px;page-break-after:always;">
+                        <!-- HEADER -->
+                        <table style="width:100%; border-collapse:collapse; border:1px solid #fff;">
+                            <tr style="border:1px solid #fff;">
+                                <td style="width:25%; border:1px solid #fff;"></td>
+                                <td style="width:50%; font-size:33px; font-weight:bold; text-align:center; border:1px solid #fff;">
+                                    <span t-esc="doc.cdp_product_id.default_code"/>
+                                </td>
+                                <td style="width:25%; font-size:17px; text-align:right; border:1px solid #fff;">
+                                    <strong>
+                                        Rev. <span t-esc="doc.cdp_product_id.product_version"/>
+                                    </strong>
+                                </td>
+                            </tr>
+                        </table>
+                        <!-- BARCODE -->
+                        <div style="text-align:center;">
+                            <div t-if="doc.cdp_product_id.barcode"
+                                t-out="doc.cdp_product_id.barcode"
+                                t-options="{
+                                    'widget': 'barcode',
+                                    'symbology': 'auto',
+                                    'quiet': 0,
+                                    'img_style': 'width:100%;height:31mm'
+                                }"/>                
+                        </div>
+                        <br/>
+                        <table style="width:100%;border:1px solid #222;border-collapse:collapse;font-size:13px;">
+                            <tr>
+                                <td class="text-center" style="border:1px solid #222; padding:7px;">
+                                    <strong>QTY</strong>
+                                </td>                                
+                                <td style="border:1px solid #222; padding:7px;">                                    
+                                    <span t-esc="'{:,.2f}'.format(doc.cdp_qty or 0.0)" style="font-size:17px;"/> pcs
+                                </td>
+                                <td class="text-center" style="border:1px solid #222; padding:7px;">
+                                    <strong>Date</strong>
+                                </td>
+                                <td style="border:1px solid #222; padding:7px;">
+                                    <span t-if="doc.cdp_move_id.picking_id.date_done" t-esc="doc.cdp_move_id.picking_id.date_done.strftime('%Y-%m-%d')"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-center" style="border:1px solid #222; padding:7px;">
+                                    <strong>Product Weight</strong>
+                                </td>
+                                <td colspan="3" style="border:1px solid #222; padding:7px;">
+                                    <t t-set="total_weight" t-value="(doc.cdp_product_id.weight or 0.0) * (doc.cdp_qty or 0.0)"/>                                    
+                                    <span t-esc="'{:,.0f}'.format(total_weight)"/> kg
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-center" style="border:1px solid #222; padding:7px;">
+                                    <strong>Order Ref</strong>
+                                </td>
+                                <td colspan="3" style="border:1px solid #222; padding:7px;">
+                                    <span t-esc="doc.cdp_move_id.picking_id.origin"/>
+                                    /
+                                    <span t-esc="doc.cdp_move_id.picking_id.name"/>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

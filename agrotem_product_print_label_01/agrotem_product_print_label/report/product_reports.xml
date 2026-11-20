@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="paperformat_label_10x8cm" model="report.paperformat">
+            <field name="name">Label 10 x 8 cm</field>
+            <field name="default" eval="False"/>
+            <field name="format">custom</field>
+            <field name="page_width">100</field>
+            <field name="page_height">80</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">3</field>
+            <field name="margin_bottom">3</field>
+            <field name="margin_left">3</field>
+            <field name="margin_right">3</field>
+            <field name="dpi">90</field>
+        </record>
+        <record id="report_product_template_label_10x8cm" model="ir.actions.report">
+            <field name="name">Product Label 10x8 cm</field>
+            <field name="model">product.template</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">agrotem_product_print_label.report_producttemplatelabel_10x8cm</field>
+            <field name="report_file">agrotem_product_print_label.report_producttemplatelabel_10x8cm</field>
+            <field name="paperformat_id" ref="agrotem_product_print_label.paperformat_label_10x8cm"/>
+            <field name="binding_type">report</field>
+            <field name="print_report_name">'Product Label_%s' % (object.default_code or '')</field>
+        </record>
+        <record id="report_stock_picking_label_10x8cm" model="ir.actions.report">
+            <field name="name">Product Label 10x8 cm</field>
+            <field name="model">stock.picking</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">agrotem_product_print_label.report_producttemplatelabel_10x8cm</field>
+            <field name="report_file">agrotem_product_print_label.report_producttemplatelabel_10x8cm</field>
+            <field name="paperformat_id" ref="agrotem_product_print_label.paperformat_label_10x8cm"/>
+            <field name="binding_model_id" ref="stock.model_stock_picking"/>
+            <field name="binding_type">report</field>
+            <field name="print_report_name">
+                (object and object.exists() and 'Product Label_%s' % (
+                    (object.name or '')
+                    .replace('/', '')
+                    .replace('_', '')
+                    .replace(' ', '')
+                )) or 'Product Label'
+            </field>
+        </record>
+    </data>
+</odoo>

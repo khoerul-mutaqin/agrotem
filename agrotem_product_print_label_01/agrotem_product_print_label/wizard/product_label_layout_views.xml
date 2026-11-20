@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="product_label_layout_form_inherit" model="ir.ui.view">
+            <field name="name">product_label_layout_form_inherit</field>
+            <field name="model">product.label.layout</field>
+            <field name="inherit_id" ref="product.product_label_layout_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='custom_quantity']" position="attributes">
+                    <attribute name="invisible">
+                        context.get('active_model') in ['product.template', 'product.product']
+                    </attribute>
+                </xpath>
+                <xpath expr="//field[@name='custom_quantity']" position="after">
+                    <field name="cdp_qty" invisible="context.get('active_model') == 'stock.picking'"/>
+                    <field name="custom_quantity" string="Print Label Quantity"
+                        invisible="context.get('active_model') == 'stock.picking'"
+                    />
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

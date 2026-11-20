@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_producttemplatelabel_10x8cm">
+        <t t-call="web.basic_layout">
+            <div class="page">
+                <t t-call="agrotem_product_print_label.report_productlabel_10x8cm"/>
+            </div>
+        </t>
+    </template>
+</odoo>

@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="report_productlabel_10x8cm">
+        <t t-call="web.html_container">
+            <t t-foreach="quantity.items()" t-as="item">
+                <t t-set="product" t-value="env['product.product'].browse(int(item[0]))"/>
+                <t t-set="barcode" t-value="item[1]['barcode']"/>
+                <t t-set="qty" t-value="item[1]['qty']"/>
+                <t t-foreach="range(qty)" t-as="i">
+                    <div style=" width:100mm; height:85mm; border:1px solid #ffffff; padding:4mm; box-sizing:border-box; font-size:11px; page-break-after: always;">
+                        <table style="width:100%; border-collapse:collapse; border:1px solid #fff;">
+                            <tr style="border:1px solid #fff;">
+                                <td style="width:25%; border:1px solid #fff;">
+                                    <span></span>
+                                </td>
+                                <td style="width:50%; font-size:33px; font-weight:bold; text-align:center; border:1px solid #fff;">
+                                    <strong t-esc="product.default_code or ''"/>
+                                </td>
+                                <td style="width:25%; font-size:17px; text-align:right; border:1px solid #fff;">
+                                    Rev. <strong t-esc="product.product_version"/>
+                                </td>
+                            </tr>
+                        </table>
+                        <div style="text-align:center;">
+                            <div 
+                                t-out="barcode"
+                                t-options="{
+                                    'widget': 'barcode',
+                                    'symbology': 'auto',
+                                    'quiet': 0,
+                                    'img_style': 'width:100%;height:31mm'
+                                }"/>
+                        </div>
+                        <br/>
+                        <table style="width:100%;border:1px solid #222;border-collapse:collapse;font-size:13px;">
+                            <t t-set="picking_rec" t-value="env['stock.picking'].browse(picking.get('id'))"/>
+                            <tr>
+                                <td class="text-center" style="border:1px solid #222; padding: 7px;">
+                                    <strong>QTY</strong>
+                                </td>
+                                <!-- <td style="border:1px solid #222; padding: 7px;">
+                                    <t t-if="not is_product_page">
+                                        <t t-set="move_qty"
+                                        t-value="sum((m.quantity or 0.0) for m in picking_rec.move_ids_without_package if m.product_id.id == product.id)"/>
+                                    </t>
+                                    <t t-else="">
+                                        <t t-set="move_qty" t-value="qty"/>
+                                    </t>
+                                    <span t-esc="'{:,.2f}'.format(move_qty)" style="font-size:17px;"/> pcs
+                                </td> -->                               
+                                <td style="border:1px solid #222; padding: 7px;">
+                                    <t t-if="not is_product_page">
+                                        <t t-set="move_qty"
+                                        t-value="sum((m.quantity or 0.0) for m in picking_rec.move_ids_without_package if m.product_id.id == product.id)"/>
+                                    </t>
+                                    <t t-else="">
+                                        <t t-set="move_qty" t-value="item[1].get('cdp_qty', 0)"/>
+                                    </t>
+                                    <span t-esc="'{:,.2f}'.format(move_qty)" style="font-size:17px;"/> pcs
+                                </td>
+                                <td class="text-center" style="border:1px solid #222; padding: 7px;">
+                                    <strong>Date</strong>
+                                </td>
+                                <td style="border:1px solid #222; padding: 7px;">                                    
+                                    <span t-if="not is_product_page and picking.get('date_done')" t-esc="picking.get('date_done')[:10]"/>
+                                    <span t-if="is_product_page" t-esc="print_date"/>
+                                </td>
+                            </tr>                          
+                            <tr>
+                                <td class="text-center" style="border:1px solid #222; padding: 7px;">
+                                    <strong>Product Weight</strong>
+                                </td>
+                                <td style="border:1px solid #222; padding: 7px;" colspan="3">                                    
+                                    <t t-set="total_weight" t-value="(product.weight or 0.0) * (move_qty or 0.0)"/>
+                                    <span t-esc="'{:,.0f}'.format(total_weight)"/> kg
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-center" style="border:1px solid #222; padding: 7px;">
+                                    <strong>Order Ref</strong>
+                                </td>
+                                <td style="border:1px solid #222; padding: 7px;" colspan="3">                                   
+                                    <t t-if="not is_product_page">
+                                        <span t-if="picking.get('origin')" t-esc="picking.get('origin')"/>
+                                        /
+                                        <span t-if="picking.get('name')" t-esc="picking.get('name')"/>
+                                    </t>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

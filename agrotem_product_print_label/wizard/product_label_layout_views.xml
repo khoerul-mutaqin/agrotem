@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Product page wizard (also the base of the Transfer / MO wizard) -->
+        <record id="product_label_layout_form_inherit" model="ir.ui.view">
+            <field name="name">product_label_layout_form_inherit</field>
+            <field name="model">product.label.layout</field>
+            <field name="inherit_id" ref="product.product_label_layout_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='custom_quantity']" position="attributes">
+                    <attribute name="string">Print Label Quantity</attribute>
+                </xpath>
+                <xpath expr="//field[@name='custom_quantity']" position="before">
+                    <field name="cdp_qty" invisible="print_format != '10x8cm'"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Transfer / MO wizard: decimal Q'ty is only used with "Custom" quantities -->
+        <record id="product_label_layout_form_picking_inherit" model="ir.ui.view">
+            <field name="name">product_label_layout_form_picking_inherit</field>
+            <field name="model">product.label.layout</field>
+            <field name="inherit_id" ref="stock.product_label_layout_form_picking"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='cdp_qty']" position="attributes">
+                    <attribute name="invisible">print_format != '10x8cm' or move_quantity == 'move'</attribute>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>
