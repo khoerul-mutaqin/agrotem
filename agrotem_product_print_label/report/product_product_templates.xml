@@ -6,6 +6,7 @@
                 <t t-set="product" t-value="env['product.product'].browse(int(item[0]))"/>
                 <t t-set="barcode" t-value="item[1]['barcode']"/>
                 <t t-set="qty" t-value="item[1]['qty']"/>
+                <t t-set="cdp_product_version" t-value="item[1]['cdp_product_version']"/>
                 <t t-foreach="range(qty)" t-as="i">
                     <div style=" width:100mm; height:85mm; border:1px solid #ffffff; padding:4mm; box-sizing:border-box; font-size:11px; page-break-after: always;">
                         <table style="width:100%; border-collapse:collapse; border:1px solid #fff;">
@@ -17,7 +18,7 @@
                                     <strong t-esc="product.default_code or ''"/>
                                 </td>
                                 <td style="width:25%; font-size:17px; text-align:right; border:1px solid #fff;">
-                                    Rev. <strong t-esc="product.product_version"/>
+                                    Rev. <strong t-esc="cdp_product_version"/>
                                 </td>
                             </tr>
                         </table>

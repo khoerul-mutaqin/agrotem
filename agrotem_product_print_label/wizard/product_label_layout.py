@@ -20,6 +20,13 @@ class ProductLabelLayout(models.TransientModel):
         required=True,
         default=1,
     )
+    # Defaults to the product's current version (PLM), editable in the wizard.
+    # The edited value is only printed on the label, never written back.
+    cdp_product_version = fields.Integer(
+        string="Product Version",
+        required=True,
+        default=1,
+    )
 
     @api.model
     def default_get(self, fields_list):
@@ -36,10 +43,28 @@ class ProductLabelLayout(models.TransientModel):
                 res["cdp_qty"] = self._cdp_get_move_qty(moves)
         else:
             res.setdefault("print_format", "dymo")
+            version = self._cdp_get_default_product_version()
+            if version:
+                res["cdp_product_version"] = version
 
         res["move_quantity"] = "custom"
         res["custom_quantity"] = 1
         return res
+
+    @api.model
+    def _cdp_get_default_product_version(self):
+        """product_version of the product the wizard was opened from."""
+        ctx = self.env.context
+        active_model = ctx.get("active_model")
+        active_ids = ctx.get("active_ids") or (
+            [ctx["active_id"]] if ctx.get("active_id") else []
+        )
+        if active_model not in ("product.template", "product.product") or not active_ids:
+            return False
+        product = self.env[active_model].browse(active_ids[:1]).exists()
+        if not product or "product_version" not in product._fields:
+            return False
+        return product.product_version
 
     @api.model
     def _cdp_get_move_qty(self, moves):
@@ -73,6 +98,8 @@ class ProductLabelLayout(models.TransientModel):
 
         is_product_page = not self.move_ids
         use_move_qty = self.move_quantity == "move" and not is_product_page
+        # product version is only printed on labels from the product page
+        cdp_product_version = self.cdp_product_version if is_product_page else 0
 
         if self.product_ids:
             products = self.product_ids
@@ -103,6 +130,7 @@ class ProductLabelLayout(models.TransientModel):
                 "barcode": barcode,
                 "qty": print_count,
                 "label_qty": label_qty,
+                "cdp_product_version": cdp_product_version,
             }
 
         if not quantity:

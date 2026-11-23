@@ -13,6 +13,9 @@
                 <xpath expr="//field[@name='custom_quantity']" position="before">
                     <field name="cdp_qty" invisible="print_format != '10x8cm'"/>
                 </xpath>
+                <xpath expr="//field[@name='custom_quantity']" position="before">
+                    <field name="cdp_product_version" invisible="print_format != '10x8cm'"/>
+                </xpath>
             </field>
         </record>
 
