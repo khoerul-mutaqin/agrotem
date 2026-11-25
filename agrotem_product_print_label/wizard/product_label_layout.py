@@ -44,7 +44,7 @@ class ProductLabelLayout(models.TransientModel):
         else:
             res.setdefault("print_format", "dymo")
             version = self._cdp_get_default_product_version()
-            if version:
+            if version is not None:
                 res["cdp_product_version"] = version
 
         res["move_quantity"] = "custom"
@@ -60,11 +60,11 @@ class ProductLabelLayout(models.TransientModel):
             [ctx["active_id"]] if ctx.get("active_id") else []
         )
         if active_model not in ("product.template", "product.product") or not active_ids:
-            return False
+            return None
         product = self.env[active_model].browse(active_ids[:1]).exists()
         if not product or "product_version" not in product._fields:
-            return False
-        return product.product_version
+            return None
+        return product.product_version or 0
 
     @api.model
     def _cdp_get_move_qty(self, moves):
